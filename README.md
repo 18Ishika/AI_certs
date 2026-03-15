@@ -1,76 +1,114 @@
-# AI_certs
-# Modular Vendor Product API
+# Modular Entity and Mapping API
 
-## Project Overview
+A modular Django REST Framework backend for managing **Vendors, Products, Courses, Certifications** and their mappings — built using `APIView` only, with Swagger documentation via `drf-yasg`.
 
-This project implements a modular REST API using Django and Django REST Framework.
-It manages Vendors, Products, Certifications, Courses and their mappings.
-
-The API supports CRUD operations, soft delete, filtering, pagination and Swagger documentation.
+---
 
 ## Tech Stack
 
-* Python
-* Django
-* Django REST Framework
-* drf-yasg (Swagger documentation)
+- Python 3.x
+- Django
+- Django REST Framework
+- drf-yasg (Swagger & ReDoc)
+
+---
+
+## Project Structure
+```
+modular_api/
+├── vendor/
+├── product/
+├── course/
+├── certification/
+├── vendor_product_mapping/
+├── product_course_mapping/
+└── course_certification_mapping/
+```
+
+Each app contains its own `models.py`, `serializers.py`, `views.py`, `urls.py`, and `admin.py`.
+
+---
 
 ## Setup Instructions
 
-### 1. Clone Repository
+### 1. Clone the Repository
+```bash
+git clone https://github.com/18Ishika/AI_certs.git
+cd AI_certs/modular_api
+```
 
-git clone <repo-link>
-
-### 2. Create Virtual Environment
-
+### 2. Create and Activate Virtual Environment
+```bash
 python -m venv env
 
-### 3. Activate Environment
-
+# Windows
 env\Scripts\activate
 
-### 4. Install Dependencies
+# Mac/Linux
+source env/bin/activate
+```
 
+### 3. Install Dependencies
+```bash
 pip install -r requirements.txt
+```
 
-### 5. Run Migrations
-
+### 4. Apply Migrations
+```bash
+python manage.py makemigrations
 python manage.py migrate
+```
 
-### 6. Start Server
-
+### 5. Run the Server
+```bash
 python manage.py runserver
+```
 
-API will run at:
-http://127.0.0.1:8000/
+API base URL: `http://127.0.0.1:8000/`
 
-Swagger Documentation:
-http://127.0.0.1:8000/swagger/
+---
 
-## API Features
+## API Documentation
 
-* Vendor CRUD APIs
-* Soft delete (inactive records hidden)
-* Filtering using query parameters
-* Pagination support
-* Swagger API documentation
+| URL | Description |
+|-----|-------------|
+| `http://127.0.0.1:8000/swagger/` | Swagger UI |
+| `http://127.0.0.1:8000/redoc/` | ReDoc UI |
 
-## Example Endpoints
+---
 
-GET /api/vendors/
-POST /api/vendors/
-GET /api/vendors/{id}/
-PUT /api/vendors/{id}/
-PATCH /api/vendors/{id}/
-DELETE /api/vendors/{id}/
+List APIs support query-parameter-based filtering:
+```
+GET /api/products/?name=Azure
+```
+
+---
+
+## Validations
+
+- Required fields enforced on all models
+- `code` field is unique per entity
+- Duplicate mappings are prevented
+- Only **one** `primary_mapping=True` allowed per parent entity
+
+---
 
 ## Soft Delete
 
-Instead of deleting records permanently, the API sets:
-is_active = False
+Records are not permanently deleted. Instead, `is_active` is set to `False`. Inactive records are excluded from all list queries.
 
-Inactive records are excluded from queries.
+---
+
+## API Testing
+
+All endpoints have been tested using **Postman**.
+
+### Screenshots
+
+> Check out the screenshots folder.
 
 
-## Advanced Filtering 
+---
 
+## Notes
+- All views use `APIView` only — no ViewSets, GenericAPIView, mixins, or routers.
